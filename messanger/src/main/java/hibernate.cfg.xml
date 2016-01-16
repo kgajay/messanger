@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    
+    <!--  MYSQL configuration -->
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/jaxrs</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.password">mysql</property>
+    
+    <!-- Display sql console/log -->
+    <property name="show_sql">true</property>
+    <property name="format_sql">true</property>
+    <property name="use_sql_comments">true</property>
+    
+    <!--  On project startup create/update/validate Enity class into mysql  -->
+    <property name="hbm2ddl.auto">update</property>
+    
+    <!-- cache settings -->
+    <!-- disable second level cache -->
+    <!-- <property name="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</property> -->
+    
+    <!--  Second Level Cache -->
+    <!--  EhCache Provider -->
+    <!-- <property name="hibernate.cache.use_second_level_cache">true</property>
+    <property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+    <property name="hibernate.cache.region.factory_class">net.sf.ehcache.hibernate.EhCacheRegionFactory</property> -->
+    <!-- <property name="hibernate.cache.use_query_cache">true</property> -->
+    
+    <!-- (POJO plain old java object) Entity mapping -->
+    <mapping class="com.ajay.messanger.models.Message"/>
+    <mapping class="com.ajay.messanger.models.Profile"/>
+    
+  </session-factory>
+</hibernate-configuration>
