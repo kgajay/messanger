@@ -32,6 +32,7 @@
     <!-- (POJO plain old java object) Entity mapping -->
     <mapping class="com.ajay.messanger.models.Message"/>
     <mapping class="com.ajay.messanger.models.Profile"/>
+    <mapping class="com.ajay.messanger.models.Comment"/>
     
   </session-factory>
 </hibernate-configuration>

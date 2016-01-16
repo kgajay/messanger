@@ -1,10 +1,14 @@
 package com.ajay.messanger.services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import com.ajay.messanger.domain.CommentResponse;
+import com.ajay.messanger.domain.MessageResponse;
 import com.ajay.messanger.dto.MessageDTO;
 import com.ajay.messanger.dto.MessageDTOImpl;
+import com.ajay.messanger.models.Comment;
 import com.ajay.messanger.models.Message;
 
 public class MessageService {
@@ -15,24 +19,70 @@ public class MessageService {
 		messageDTO = new MessageDTOImpl();
 	}
 	
-	public List<Message> getAllMessages() {
-		// TODO Auto-generated method stub
-		return messageDTO.listMessages();
+	public MessageResponse generateResponse(Message msg) {
+		
+		MessageResponse msgResp = new MessageResponse();
+		msgResp.setAuthor(msg.getAuthor());
+		msgResp.setMessage(msg.getMessage());
+		msgResp.setMessageId(msg.getMessageId());
+		msgResp.setRecordTracker(msg.getRecordTracker());
+		List<CommentResponse> cmnts = new ArrayList<CommentResponse>();
+		for(Comment cmnt : msg.getComments()){
+			CommentResponse cmntResp = new CommentResponse();
+			cmntResp.setAuthor(cmnt.getAuthor());
+			cmntResp.setComment(cmnt.getComment());
+			cmntResp.setCommentId(cmnt.getCommentId());
+			cmntResp.setRecordTracker(cmnt.getRecordTracker());
+			cmnts.add(cmntResp);
+		}
+		msgResp.setComments(cmnts);
+		
+		return msgResp;
+	}
+	
+	public List<MessageResponse> getAllMessages(int year, int offset, int size) {
+		List<Message> messages = new ArrayList<Message>();
+		if(year > 0){
+			messages = this.getAllMessagesForYear(year);
+		}else if (offset >= 0 && size > 0) {
+			messages = this.getAllMessagesPaginated(offset, size);
+		}
+		messages = messageDTO.listMessages();
+		
+		List<MessageResponse> msgResponse = new ArrayList<MessageResponse>();
+		
+		for(Message msg : messages) {
+			
+			msgResponse.add(this.generateResponse(msg));
+			
+		}
+		return msgResponse;
 	}
 
 	public List<Message> getAllMessagesForYear(int year) {
-		// TODO Auto-generated method stub
-		List<Message> messagesForYear = new ArrayList<Message>(); 
-		return messageDTO.listMessages();
+		List<Message> messagesForYear = new ArrayList<Message>();
+		List<Message> messages = messageDTO.listMessages();
+		Calendar cal = Calendar.getInstance();
+		for(Message msg : messages){
+			cal.setTime(msg.getRecordTracker().getCreatedAt());
+			if(cal.get(Calendar.YEAR) == year) {
+				messagesForYear.add(msg);
+			}
+		}
+		return messagesForYear;
 	}
 	
 	public List<Message> getAllMessagesPaginated(int offset, int size) {
 		// TODO Auto-generated method stub
-		return messageDTO.listMessages();
+		return messageDTO.listMessages(offset, size);
 	}
 	
-	public Message getMessage(long id) {
-		return messageDTO.getMessage(id);
+	public MessageResponse getMessage(long id) {
+		
+		Message msg = messageDTO.getMessage(id);
+		
+		return this.generateResponse(msg);
+		
 	}
 	
 	public Message updateMessage(long messageId, Message msg) {

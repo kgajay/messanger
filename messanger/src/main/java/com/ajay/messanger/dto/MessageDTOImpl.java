@@ -10,11 +10,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import com.ajay.messanger.models.Comment;
 import com.ajay.messanger.models.Message;
 import com.ajay.messanger.models.RecordTracker;
 
 
-@SuppressWarnings({"unchecked", "deprecation"})
+@SuppressWarnings({"unchecked", "deprecation", "unused"})
 public class MessageDTOImpl implements MessageDTO{
 
 	private static SessionFactory sessionFactory;
@@ -81,6 +82,7 @@ public class MessageDTOImpl implements MessageDTO{
 	public Message getMessage(long id) {
 		Session session = sessionFactory.openSession();
 		Message msg = (Message) session.get(Message.class, id);
+		for(Comment cmnt : msg.getComments());
 		session.close();
 		return msg;
 	}
@@ -90,7 +92,33 @@ public class MessageDTOImpl implements MessageDTO{
 		Session session = sessionFactory.openSession();
 		Query query = session.createQuery("from Message");
 		List<Message> msgs = new ArrayList<Message>();
+		try{
+			msgs = query.list();
+			for(Message msg : msgs){
+//				msg.getComments();
+				for(Comment cmnt : msg.getComments());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return msgs;
+	}
+	
+	@Override
+	public List<Message> listMessages(int offset, int size){
+		Session session = sessionFactory.openSession();
+		Query query = session.createQuery("from Message");
+		query.setFirstResult(offset);
+		query.setMaxResults(size);
+		System.out.println("Offset query: " + query.getQueryString());
+		List<Message> msgs = new ArrayList<Message>();
 		msgs = query.list();
+		for(Message msg : msgs){
+			for(Comment cmnt : msg.getComments());
+		}
 		session.close();
 		return msgs;
 	}
@@ -116,5 +144,18 @@ public class MessageDTOImpl implements MessageDTO{
 		}
 		
 		return isDeleted;
+	}
+	
+	@Override
+	public List<Comment> getComments(Message msg) {
+		Session session = sessionFactory.openSession();
+		
+		List<Comment> cmnts = new ArrayList<Comment>();
+		for(Comment cmnt : msg.getComments()){
+			cmnts.add(cmnt);
+		}
+		session.close();
+		
+		return cmnts;
 	}
 }
