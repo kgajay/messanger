@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ajay</groupId>
-    <artifactId>messanger</artifactId>
+    <artifactId>messenger</artifactId>
     <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    <name>messanger</name>
+    <name>messenger</name>
 
     <build>
-        <finalName>messanger</finalName>
+        <finalName>messenger</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
