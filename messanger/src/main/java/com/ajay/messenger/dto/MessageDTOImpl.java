@@ -13,23 +13,24 @@ import org.hibernate.cfg.Configuration;
 import com.ajay.messenger.models.Comment;
 import com.ajay.messenger.models.Message;
 import com.ajay.messenger.models.RecordTracker;
+import com.ajay.messenger.utils.HibernateUtil;
 
 
-@SuppressWarnings({"unchecked", "deprecation", "unused"})
+@SuppressWarnings({"unchecked", "unused"})
 public class MessageDTOImpl implements MessageDTO{
 
-	private static SessionFactory sessionFactory;
-	
-	public MessageDTOImpl() {
-		
-		try{
-			 sessionFactory = new Configuration().configure().buildSessionFactory();
-	      }catch (Throwable ex) { 
-	         System.err.println("Failed to create sessionFactory object." + ex);
-	         throw new ExceptionInInitializerError(ex); 
-	      }
-		
-	}
+//	private static SessionFactory sessionFactory;
+//	
+//	public MessageDTOImpl() {
+//		
+//		try{
+//			 sessionFactory = new Configuration().configure().buildSessionFactory();
+//	      }catch (Throwable ex) { 
+//	         System.err.println("Failed to create sessionFactory object." + ex);
+//	         throw new ExceptionInInitializerError(ex); 
+//	      }
+//		
+//	}
 	
 	@Override
 	public long insertMessage(Message msg){
@@ -37,7 +38,7 @@ public class MessageDTOImpl implements MessageDTO{
 		long retVal = 0;
 		
 		msg.setRecordTracker(new RecordTracker());
-		Session session = sessionFactory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		
 		try{
@@ -58,7 +59,7 @@ public class MessageDTOImpl implements MessageDTO{
 	
 	@Override
 	public Boolean updateMessage(Message msg) {
-		Session session = sessionFactory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		Boolean isSuccesfull = false;
 		try{
@@ -80,7 +81,7 @@ public class MessageDTOImpl implements MessageDTO{
 	
 	@Override
 	public Message getMessage(long id) {
-		Session session = sessionFactory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Message msg = (Message) session.get(Message.class, id);
 		for(Comment cmnt : msg.getComments());
 		session.close();
@@ -89,7 +90,7 @@ public class MessageDTOImpl implements MessageDTO{
 	
 	@Override
 	public List<Message> listMessages(){
-		Session session = sessionFactory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Query query = session.createQuery("from Message");
 		List<Message> msgs = new ArrayList<Message>();
 		try{
@@ -109,7 +110,7 @@ public class MessageDTOImpl implements MessageDTO{
 	
 	@Override
 	public List<Message> listMessages(int offset, int size){
-		Session session = sessionFactory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Query query = session.createQuery("from Message");
 		query.setFirstResult(offset);
 		query.setMaxResults(size);
@@ -126,7 +127,7 @@ public class MessageDTOImpl implements MessageDTO{
 	@Override
 	public Boolean deleteMessage(long id) {
 		Boolean isDeleted = false;
-		Session session = sessionFactory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = (Transaction) session.beginTransaction();
@@ -148,7 +149,7 @@ public class MessageDTOImpl implements MessageDTO{
 	
 	@Override
 	public List<Comment> getComments(Message msg) {
-		Session session = sessionFactory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		
 		List<Comment> cmnts = new ArrayList<Comment>();
 		for(Comment cmnt : msg.getComments()){

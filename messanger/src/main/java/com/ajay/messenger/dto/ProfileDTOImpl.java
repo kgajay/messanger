@@ -8,24 +8,19 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
 import com.ajay.messenger.models.Profile;
 import com.ajay.messenger.models.RecordTracker;
+import com.ajay.messenger.utils.HibernateUtil;
 
-@SuppressWarnings({"unchecked", "deprecation"})
+@SuppressWarnings({"unchecked"})
 public class ProfileDTOImpl implements ProfileDTO{
 
 	private static SessionFactory sessionFactory;
 	
 	public ProfileDTOImpl() {
 		
-		try{
-			 sessionFactory = new Configuration().configure().buildSessionFactory();
-	      }catch (Throwable ex) { 
-	         System.err.println("Failed to create sessionFactory object." + ex);
-	         throw new ExceptionInInitializerError(ex); 
-	      }
+		sessionFactory = HibernateUtil.getSessionFactory();
 		
 	}
 	

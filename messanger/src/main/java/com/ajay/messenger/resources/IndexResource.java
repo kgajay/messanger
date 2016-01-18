@@ -11,6 +11,10 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import org.hibernate.Session;
+
+import com.ajay.messenger.utils.HibernateUtil;
+
 @Path("/")
 public class IndexResource {
 
@@ -22,7 +26,12 @@ public class IndexResource {
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
+    @Path("/index")
     public String index() {
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        System.out.println("Hibernate UTILITY WORKING");
+        session.close();
         return "This is root response !!";
     }
     
