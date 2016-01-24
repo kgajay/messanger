@@ -148,7 +148,23 @@
 		  <version>2.5.3</version>
 		</dependency>
 		<!-- JACKSON DEPENDENCY END -->
+		
+		<!--  JAXB Dependency -->
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxb-provider</artifactId>
+			<version>2.2.0.GA</version>
+		</dependency>
+		<!--  JAXB Dependency -->
 	    
+	    <!--  Excel 2007 dependency -->
+	    <dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.11</version>
+		</dependency>
+		<!--  Excel 2007 dependency end -->
+
     </dependencies>
     <properties>
         <jersey.version>2.16</jersey.version>
