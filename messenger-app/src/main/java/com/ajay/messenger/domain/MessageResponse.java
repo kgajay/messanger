@@ -20,6 +20,7 @@ public class MessageResponse {
 	private String message;
 	private String author;
 	private List<CommentResponse> comments = new ArrayList<CommentResponse>();
+	private long commentsCount;
 	private RecordTracker recordTracker;
 	
 }

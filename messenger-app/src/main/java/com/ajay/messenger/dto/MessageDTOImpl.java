@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 import com.ajay.messenger.models.Comment;
 import com.ajay.messenger.models.Message;
@@ -139,15 +142,18 @@ public class MessageDTOImpl implements MessageDTO{
 	}
 	
 	@Override
-	public List<Comment> getComments(Message msg) {
+	public long getCommentsCount(long id) {
+		long retVal = 0;
 		Session session = sessionFactory.openSession();
 		
-		List<Comment> cmnts = new ArrayList<Comment>();
-		for(Comment cmnt : msg.getComments()){
-			cmnts.add(cmnt);
-		}
+		Criteria cr = session.createCriteria(Comment.class);
+		cr.add(Restrictions.eq("message.messageId", id));
+		cr.setProjection(Projections.rowCount());
+		System.out.println("Criteria query: " + cr.toString());
+		List<?> rowCount = cr.list();
+		retVal = (long) rowCount.get(0);
 		session.close();
+		return retVal;
 		
-		return cmnts;
 	}
 }

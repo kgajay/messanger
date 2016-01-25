@@ -7,6 +7,7 @@ import java.util.List;
 import com.ajay.messenger.domain.CommentResponse;
 import com.ajay.messenger.domain.MessageResponse;
 import com.ajay.messenger.dto.MessageDTO;
+import com.ajay.messenger.exceptions.DataNotFoundException;
 import com.ajay.messenger.models.Comment;
 import com.ajay.messenger.models.Message;
 
@@ -25,6 +26,7 @@ public class MessageService {
 		msgResp.setMessage(msg.getMessage());
 		msgResp.setMessageId(msg.getMessageId());
 		msgResp.setRecordTracker(msg.getRecordTracker());
+		msgResp.setCommentsCount(messageDTO.getCommentsCount(msg.getMessageId()));
 		List<CommentResponse> cmnts = new ArrayList<CommentResponse>();
 		for(Comment cmnt : msg.getComments()){
 			CommentResponse cmntResp = new CommentResponse();
@@ -109,5 +111,13 @@ public class MessageService {
 	
 	public Boolean deleteMessage(long id) {
 		return messageDTO.deleteMessage(id);
+	}
+
+	public long getTotalCommentsCount(long id) {
+		if(id > 0) {
+			return messageDTO.getCommentsCount(id);
+		}else {
+			throw new DataNotFoundException("msg id 0 does not exists");
+		}
 	}
 }

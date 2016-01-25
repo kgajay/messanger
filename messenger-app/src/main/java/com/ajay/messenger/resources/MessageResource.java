@@ -86,4 +86,10 @@ public class MessageResource {
 		
 	}
 	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/{messageId}/comments-count")
+	public long getCommentsCount(@PathParam("messageId") long id) {
+		return messageService.getTotalCommentsCount(id);
+	}
 }

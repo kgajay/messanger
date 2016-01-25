@@ -2,7 +2,6 @@ package com.ajay.messenger.dto;
 
 import java.util.List;
 
-import com.ajay.messenger.models.Comment;
 import com.ajay.messenger.models.Message;
 
 public interface MessageDTO {
@@ -19,6 +18,5 @@ public interface MessageDTO {
 	
 	public Boolean deleteMessage(long id);
 
-	public List<Comment> getComments(Message msg);
-	
+	public long getCommentsCount(long id);
 }
