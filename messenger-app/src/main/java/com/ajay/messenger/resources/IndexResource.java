@@ -4,13 +4,17 @@ import java.net.URI;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.MatrixParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -93,4 +97,22 @@ public class IndexResource {
 	public String dateToString(@DefaultValue ("today") @QueryParam("date") DateRequest dateRequest) {
 		return "Got " + dateRequest.toString();
 	}
+	
+	@GET
+    @Path("/metrix-param")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String metrixParam(@MatrixParam("param") String metrixParam,
+    						  @HeaderParam("customHeader") String customHeader,
+    						  @CookieParam("cookie") String cookieParam) {
+        return "Metrix param is: " + metrixParam + " Header param: " + customHeader + " Cookie Param " + cookieParam;
+    }
+    
+    @GET
+    @Path("/context")
+    public String getParameterUsingContext(@Context UriInfo uriInfo, @Context HttpHeaders httpHeaders) {
+    	String absPath =  uriInfo.getAbsolutePath().toString();
+    	String header = httpHeaders.getRequestHeaders().toString();
+    	return "absloute path: " + absPath + " requestedHeaders: " + header +
+    			" particuler header: " + httpHeaders.getRequestHeader("content-type").toString();
+    }
 }
