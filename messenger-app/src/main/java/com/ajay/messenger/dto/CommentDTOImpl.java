@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.ajay.messenger.exceptions.DataNotFoundException;
 import com.ajay.messenger.models.Comment;
 import com.ajay.messenger.models.RecordTracker;
 
@@ -72,8 +73,7 @@ public class CommentDTOImpl implements CommentDTO {
 		Session session = sessionFactory.openSession();
 		Comment cmnt = (Comment) session.get(Comment.class, id);
 		if(cmnt == null) {
-//			throw new Exception("Comment with id " + id + " does not exists"); 
-			return null;
+			throw new DataNotFoundException("Comment with id " + id + " does not exists"); 
 		}
 		session.close();
 		return cmnt;

@@ -7,13 +7,21 @@ import com.ajay.messenger.dto.MessageDTOImpl;
 import com.ajay.messenger.dto.PersonDTO;
 import com.ajay.messenger.dto.ProfileDTO;
 import com.ajay.messenger.dto.ProfileDTOImpl;
+import com.ajay.messenger.exceptions.DataNotFoundExceptionMapper;
+import com.ajay.messenger.exceptions.GenericExceptionMapper;
+import com.ajay.messenger.filters.AuthFilter;
+import com.ajay.messenger.filters.LoginFilter;
+import com.ajay.messenger.filters.PoweredByResponseFilter;
 import com.ajay.messenger.health.DatabaseHealthCheck;
 import com.ajay.messenger.health.TemplateHealthCheck;
+import com.ajay.messenger.messagebodywriters.DateMessageBodyWriter;
+import com.ajay.messenger.messagebodywriters.ShortDateMessageBodyWriter;
 import com.ajay.messenger.models.Comment;
 import com.ajay.messenger.models.Message;
 import com.ajay.messenger.models.Person;
 import com.ajay.messenger.models.Profile;
 import com.ajay.messenger.models.RecordTracker;
+import com.ajay.messenger.paramconverters.MyDateParamConverter;
 import com.ajay.messenger.resources.CommentResource;
 import com.ajay.messenger.resources.IndexResource;
 import com.ajay.messenger.resources.MessageResource;
@@ -27,6 +35,7 @@ import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+
 
 public class MessengerAppApplication extends Application<MessengerAppConfiguration> {
 
@@ -59,11 +68,27 @@ public class MessengerAppApplication extends Application<MessengerAppConfigurati
     	final MessageDTO messageDTO = new MessageDTOImpl(hibernate.getSessionFactory());
     	final ProfileDTO profileDTO = new ProfileDTOImpl(hibernate.getSessionFactory());
     	
-    	//healthCheck
+    	// healthCheck
     	environment.healthChecks().register("template", new TemplateHealthCheck(configuration.getTemplate()));
     	environment.healthChecks().register("database", new DatabaseHealthCheck(configuration.getDatabase()));
     	
-    	//Resource Registeration
+    	 // Register the custom ExceptionMapper(s)
+        environment.jersey().register(new GenericExceptionMapper());
+        environment.jersey().register(new DataNotFoundExceptionMapper());
+        
+        // Register custom filter(s)
+        environment.jersey().register(new AuthFilter());
+        environment.jersey().register(new LoginFilter());
+        environment.jersey().register(new PoweredByResponseFilter());
+        
+        // Register message body writer
+        environment.jersey().register(new DateMessageBodyWriter());
+        environment.jersey().register(new ShortDateMessageBodyWriter());
+        
+        // Register param converter
+        environment.jersey().register(new MyDateParamConverter());
+        
+    	// Resource Registration
     	environment.jersey().register(new IndexResource(configuration.getTemplate(), configuration.getDefaultName(), configuration.getServiceConfig()));
     	environment.jersey().register(new MessageResource(new MessageService(messageDTO)));
     	environment.jersey().register(new ProfileResource(profileDTO));
