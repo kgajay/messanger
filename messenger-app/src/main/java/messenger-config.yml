@@ -1,5 +1,5 @@
 logging:
-  level: INFO
+  level: DEBUG
   loggers:
     "io.dropwizard": INFO
     "org.hibernate.type": TRACE
@@ -21,6 +21,7 @@ logging:
       timeZone: UTC
       
 server:
+  rootPath: /api/
   adminMinThreads: 1
   adminMaxThreads: 64
   applicationContextPath: /messenger
@@ -42,6 +43,10 @@ server:
     #  keyStorePassword: example
     #  validateCerts: false
 
+# views:
+  # .ftl:
+    # strict_syntax: yes
+    
 database:
   # the name of your JDBC driver
   driverClass: com.mysql.jdbc.Driver

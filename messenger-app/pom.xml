@@ -46,6 +46,33 @@
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-hibernate</artifactId>
         </dependency>
+        
+        <!-- Asset Bundle Dependency -->
+        <dependency>
+  			<groupId>io.dropwizard</groupId>
+  			<artifactId>dropwizard-assets</artifactId>
+		</dependency>
+		<!-- Asset Bundle Dependency End-->
+		
+		<!-- View Bundle Dependency -->
+		<dependency>
+        	<groupId>io.dropwizard</groupId>
+        	<artifactId>dropwizard-views</artifactId>
+		</dependency>
+		
+		<dependency>
+        	<groupId>io.dropwizard</groupId>
+        	<artifactId>dropwizard-views-freemarker</artifactId>
+    	</dependency>
+		<!-- View Bundle Dependency end -->
+		
+		<!--  dropwizard testing -->
+		
+		<!--  dropwizard testing end-->
+		<dependency>
+        	<groupId>io.dropwizard</groupId>
+        	<artifactId>dropwizard-testing</artifactId>
+    	</dependency>
         <!--  dropwizard dependency -->
         
         <!-- mysql dependency -->

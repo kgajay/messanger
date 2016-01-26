@@ -31,10 +31,12 @@ import com.ajay.messenger.services.CommentService;
 import com.ajay.messenger.services.MessageService;
 
 import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.views.ViewBundle;
 
 
 public class MessengerAppApplication extends Application<MessengerAppConfiguration> {
@@ -57,6 +59,12 @@ public class MessengerAppApplication extends Application<MessengerAppConfigurati
     public void initialize(final Bootstrap<MessengerAppConfiguration> bootstrap) {
         
     	bootstrap.addBundle(hibernate);
+    	
+    	// Asset Bundle
+    	bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
+    	
+    	// Enable View
+    	bootstrap.addBundle(new ViewBundle<MessengerAppConfiguration>());
     }
 
     @Override

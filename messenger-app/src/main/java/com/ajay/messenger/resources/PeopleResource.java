@@ -11,13 +11,13 @@ import org.apache.log4j.Logger;
 import com.ajay.messenger.configs.ServiceConfig;
 import com.ajay.messenger.dto.PersonDTO;
 import com.ajay.messenger.models.Person;
+import com.ajay.messenger.views.PeopleView;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 
 import io.dropwizard.hibernate.UnitOfWork;
 
 @Path("/hello-world")
-@Produces(MediaType.APPLICATION_JSON)
 public class PeopleResource {
 
 	private final ServiceConfig serviceConfig;
@@ -32,6 +32,7 @@ public class PeopleResource {
 	@GET
 	@Timed
 	@UnitOfWork
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/get-person/{id}")
 	public String getPerson(@PathParam("id") long id) {
 		logger.info("create people");
@@ -45,4 +46,21 @@ public class PeopleResource {
 		}
 		return "LOL";
 	}
+	
+	
+	@GET
+	@Timed
+	@UnitOfWork
+	@Produces(MediaType.TEXT_HTML)
+	@Path("/people/{id}")
+	public PeopleView getPersonView(@PathParam("id") long id) {
+		Optional<Person> persons = personDTO.findById(id);
+		if(persons.isPresent()) {
+			Person p = persons.get();
+			return new PeopleView(p);
+		}
+		return null;
+        
+    }
+	
 }
