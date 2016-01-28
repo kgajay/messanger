@@ -151,7 +151,7 @@ public class MessageDTOImpl implements MessageDTO{
 		cr.setProjection(Projections.rowCount());
 		System.out.println("Criteria query: " + cr.toString());
 		List<?> rowCount = cr.list();
-		retVal = (long) rowCount.get(0);
+		retVal = Long.valueOf((String) rowCount.get(0));
 		session.close();
 		return retVal;
 		

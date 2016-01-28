@@ -4,15 +4,7 @@ import java.net.URI;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.ws.rs.CookieParam;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.MatrixParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -20,6 +12,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.ajay.messenger.configs.ServiceConfig;
+import com.ajay.messenger.domain.Credential;
+import com.ajay.messenger.domain.LoginCredential;
 import com.codahale.metrics.annotation.Timed;
 import com.ajay.messenger.domain.DateRequest;
 
@@ -115,4 +109,49 @@ public class IndexResource {
     	return "absloute path: " + absPath + " requestedHeaders: " + header +
     			" particuler header: " + httpHeaders.getRequestHeader("content-type").toString();
     }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+	@Path("/login")
+	public String login(LoginCredential loginCredential) {
+        System.out.println("incoming loginCredential: " + loginCredential.getUser() + " ;pswd: " + loginCredential.getPassword());
+        if(Credential.verifyUser(loginCredential)) {
+            LoginCredential lc = Credential.searchUser(loginCredential.getUser());
+            if(lc.getAuthToken() != null) {
+                System.out.println("AuthToken present: " + lc.getAuthToken());
+            }else {
+                System.out.println("Create AuthToken");
+                Credential.issueToken(lc, serviceConfig.getAuthSalt());
+            }
+            return "User: " + lc.getUser() + " Pswd: " + lc.getPassword() + " authToken: " + lc.getAuthToken();
+        }
+        return "User not present";
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/sign-up")
+    public String signUp(LoginCredential f) {
+	
+	    return "login api : " + serviceConfig.getAuthSalt() + " Form: " + f.getUser();
+    
+    }
+
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/get-user-info")
+    public String getUserInfo() {
+        return "login api : " + serviceConfig.getAuthSalt();
+    }
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/get-template")
+    public String getTemplate() {
+        return "login api : " + String.format(template, defaultName);
+    }
+
 }

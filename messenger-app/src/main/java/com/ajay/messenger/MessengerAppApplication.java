@@ -86,7 +86,7 @@ public class MessengerAppApplication extends Application<MessengerAppConfigurati
         
         // Register custom filter(s)
         environment.jersey().register(new AuthFilter());
-        environment.jersey().register(new LoginFilter());
+        environment.jersey().register(new LoginFilter(configuration.getServiceConfig()));
         environment.jersey().register(new PoweredByResponseFilter());
         
         // Register message body writer

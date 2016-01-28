@@ -89,6 +89,13 @@ template: Hello, %s!
 defaultName: Messenger
 
 serviceConfig:
+  authSalt: 123456789
+  whiteListedApis:
+    - login
+    - sign-up
+  securedApis:
+    - get-user-info
+    - get-template
   paytm:
     host: paytm.in
     port: 80
