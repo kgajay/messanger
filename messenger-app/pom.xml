@@ -107,7 +107,15 @@
             <version>20151123</version>
         </dependency>
         <!-- JSON support end-->
+		
+		<!-- Cache Bundle -->
+		<dependency>
+  			<groupId>com.bendb.dropwizard</groupId>
+  			<artifactId>dropwizard-redis</artifactId>
+			<version>0.8.1-1</version>
+		</dependency>
 
+		<!-- Cache Bundle End -->
     </dependencies>
 
     <build>

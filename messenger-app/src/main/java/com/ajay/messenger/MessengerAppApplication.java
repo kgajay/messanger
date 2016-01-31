@@ -29,6 +29,8 @@ import com.ajay.messenger.resources.PeopleResource;
 import com.ajay.messenger.resources.ProfileResource;
 import com.ajay.messenger.services.CommentService;
 import com.ajay.messenger.services.MessageService;
+import com.bendb.dropwizard.redis.JedisBundle;
+import com.bendb.dropwizard.redis.JedisFactory;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
@@ -65,6 +67,17 @@ public class MessengerAppApplication extends Application<MessengerAppConfigurati
     	
     	// Enable View
     	bootstrap.addBundle(new ViewBundle<MessengerAppConfiguration>());
+    	
+    	
+    	// Redis cache
+    	bootstrap.addBundle(new JedisBundle<MessengerAppConfiguration>() {
+
+			@Override
+			public JedisFactory getJedisFactory(MessengerAppConfiguration configuration) {
+				return configuration.getJedisFactory();
+			}
+    		
+    	});
     }
 
     @Override

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import com.ajay.messenger.configs.ServiceConfig;
+import com.bendb.dropwizard.redis.JedisFactory;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.*;
 
@@ -29,5 +30,9 @@ public class MessengerAppConfiguration extends Configuration {
     
     @NotNull
     private ServiceConfig serviceConfig = new ServiceConfig();
+    
+    @Valid
+    @NotNull
+    private JedisFactory jedisFactory = new JedisFactory();
 	
 }

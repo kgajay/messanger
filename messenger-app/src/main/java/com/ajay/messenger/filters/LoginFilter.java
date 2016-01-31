@@ -35,31 +35,29 @@ public class LoginFilter implements ContainerRequestFilter, ContainerResponseFil
 
         String uriPath = requestContext.getUriInfo().getPath();
         String keyName = "";
-        if(serviceConfig.getWhiteListedApis().contains(uriPath)) {
-            return;
-        }else {
-            if(serviceConfig.getSecuredApis().contains(uriPath)) {
-                if(requestContext.getMethod().equalsIgnoreCase("POST")) {
-                    StringWriter writer = new StringWriter();
-                    IOUtils.copy(requestContext.getEntityStream(), writer, "UTF-8");
-                    String requestBody = writer.toString();
-                    System.out.println("Request body: " + requestBody);
+        if(serviceConfig.getSecuredApis().contains(uriPath)) {
+            if(requestContext.getMethod().equalsIgnoreCase("POST")) {
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(requestContext.getEntityStream(), writer, "UTF-8");
+                String requestBody = writer.toString();
+                System.out.println("Request body: " + requestBody);
 
-                    JSONObject jsonObj = new JSONObject(requestBody);
-                    Map<String, Object> reqParams = JsonUtil.jsonToMap(jsonObj);
+                JSONObject jsonObj = new JSONObject(requestBody);
+                Map<String, Object> reqParams = JsonUtil.jsonToMap(jsonObj);
 
-                    System.out.println("Request body key val: " + reqParams.get("user"));
-                    requestContext.setEntityStream(new ByteArrayInputStream(requestBody.getBytes()));
-                    keyName = (String) reqParams.get("user");
-                }else if(requestContext.getMethod().equalsIgnoreCase("GET")){
-                    keyName = requestContext.getUriInfo().getQueryParameters().get("user").get(0);
-                }
-                if(authenticate(requestContext, keyName)) {
-                    return;
-                }
+                System.out.println("Request body key val: " + reqParams.get("user"));
+                requestContext.setEntityStream(new ByteArrayInputStream(requestBody.getBytes()));
+                keyName = (String) reqParams.get("user");
+            }else if(requestContext.getMethod().equalsIgnoreCase("GET")){
+                keyName = requestContext.getUriInfo().getQueryParameters().get("user").get(0);
             }
-
+            if(authenticate(requestContext, keyName)) {
+                return;
+            }
+        }else {
+        	return;
         }
+
 
 		Response unauthorizedResponse = Response
 				.status(Response.Status.UNAUTHORIZED)

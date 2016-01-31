@@ -14,7 +14,11 @@ import javax.ws.rs.core.UriInfo;
 import com.ajay.messenger.configs.ServiceConfig;
 import com.ajay.messenger.domain.Credential;
 import com.ajay.messenger.domain.LoginCredential;
+import com.ajay.messenger.utils.RedisUtility;
 import com.codahale.metrics.annotation.Timed;
+
+import redis.clients.jedis.Jedis;
+
 import com.ajay.messenger.domain.DateRequest;
 
 @Path("/")
@@ -152,6 +156,41 @@ public class IndexResource {
     @Path("/get-template")
     public String getTemplate() {
         return "login api : " + String.format(template, defaultName);
+    }
+    
+    
+    @GET
+    //@CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
+    @Path("/cache")
+    public String getCachableValue(@Context Jedis jedis) {
+    	System.out.println("Inside dghsvjbkasl;vhgdsbjsnkm");
+    	String keyName ="jedis";
+    	String cachedBlogContent = jedis.get(keyName);
+    	if(jedis.isConnected()){
+    		System.out.println("connected");
+    	}
+    	System.out.println("cachedBlogCoontent " + cachedBlogContent);
+    	if(cachedBlogContent == null || cachedBlogContent.isEmpty()) {
+    		System.out.println("setting cache");
+    		jedis.set(keyName, "YO YO");
+    	}else {
+    		System.out.println("getting from cache");
+    	}
+        return jedis.get(keyName);
+    }
+    
+    
+    @GET
+    @Path("/redis-cache")
+    public String getRedisCachableValue(@Context Jedis jedis) {
+    	RedisUtility redisUtility = new RedisUtility(jedis);
+    	LoginCredential loginCredential = new LoginCredential("redis", "redis");
+    	loginCredential.setAuthToken("redis:6379");
+    	System.out.println("Object creation done");
+    	redisUtility.setData("redis", loginCredential, 60);
+    	System.out.println("redis set data done");
+    	LoginCredential cacheLoginCredential = (LoginCredential) redisUtility.getData("redis", LoginCredential.class);
+    	return cacheLoginCredential.getUser()+"   "+cacheLoginCredential.getPassword()+"  "+cacheLoginCredential.getAuthToken();
     }
 
 }
